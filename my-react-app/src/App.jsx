@@ -7,28 +7,30 @@ function UserList() {
   const [loading, setLoading] = useState(false);
   const [skip, setSkip] = useState(0);
 
+  const limit = 10;
 
   async function fetchUsers() {
     setLoading(true);
 
     try {
       const response = await fetch(
-        `https://dummyjson.com/users`,
+        `https://dummyjson.com/users?limit=${limit}&skip=${skip}`
       );
-      const data = await response.json();
 
-      setUsers((prevUsers) => [...prevUsers, ...data.users]);
-      
+      const datos = await response.json();
+
+      const newUsers = datos.users;
+
+      setUsers((prevUsers) => [...prevUsers, ...newUsers]);
+
+      setSkip((prev) => prev + limit);
+
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   return (
     <div>
