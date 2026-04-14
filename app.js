@@ -28,15 +28,19 @@ fetch ('https://dummyjson.com/users')
 const listContainer = document.getElementById("user-list-container")
 const moreBtn = document.getElementById ("load-more-btn")
 
+let skip = 0;
+const limit = 10;
+
 async function buscadorUsuarios() {
     moreBtn.disabled = true;
-
+    /* ?limit=${limit}&skip=${skip}*/
     try {
         const response = await fetch ('https://dummyjson.com/users')
         const datos = await response.json();
         const users = datos.users;
+        const usersFiltrados = users.slice(skip, skip + limit);
 
-        users.forEach(element => {
+        usersFiltrados.forEach(element => {
             const card = document.createElement("div");
             card.className ="user-card";
             card.innerHTML = `<img src="${element.image}" alt="${element.firstName}">
@@ -44,6 +48,7 @@ async function buscadorUsuarios() {
             listContainer.appendChild(card)
         });
 
+        skip += limit;
 
     }  catch (error) {
     console.error("Error fetching users:", error);
